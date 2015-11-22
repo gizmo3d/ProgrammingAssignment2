@@ -1,43 +1,53 @@
-## Put comments here that give an overall description of what your
-## functions do
+## - makeCacheMatrix asks for a square matrix as input, and return its invert
+## - cacheSolve takes the same input matrix to return either its cached version or called makeCacheMatrix
+## to compute it for the first time (needed once to put in the cache)
+## ------------------------------------------------------------------------
+## Examples : 
+##    myMatrix <- makeCacheMatrix(matrix((1:4), ncol=2)
+##    cacheSolve(myMatrix)
+##    cacheSolve(myMatrix)
 
-## Write a short comment describing this function
 
-## test fonction donnée par énoncé
-## JUST an empty function test for myself for the github side
-makeVector <- function(x = numeric()) {
-        m <- NULL
-        
-        ## first function created inside the makeVector function - SET function
-        set <- function(y) {
-                x <<- y
-                m <<- NULL
-        }
-        
-        ## second function created inside the makeVector function - GET function
-        get <- function() x
-        
-        ## third function created inside the makeVector function - SETMEAN function
-        setmean <- function(mean) m <<- mean
-        
-        ## fourth function created inside the makeVector function - GETMEAN function
-        getmean <- function() m
-        
-        list(set = set, get = get,
-             setmean = setmean,
-             getmean = getmean)
-}
-
-## fin test fonction donnée par énoncé
-##################################################################
-
+## makeCacheMatrix is the function to be called FIRST, before the function cacheSolve 
 makeCacheMatrix <- function(x = matrix()) {
-
+  m <- NULL
+  
+  set <- function(y) {
+    x <<- y
+    m <<- NULL
+  }
+  
+  get <- function() x
+  
+  setInvertMatrix <- function(solve) m <<- solve
+  
+  getInvertMatrix <- function() m
+  
+  list(set = set, get = get,
+       setInvertMatrix = setInvertMatrix,
+       getInvertMatrix = getInvertMatrix)
 }
 
 
-## Write a short comment describing this function
-
+########################################
+## cacheSolve is the function to be called AFTER the function makeCacheMatrix
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  m <- x$getInvertMatrix()
+  
+  ## testing if the invert matrix has already been calculated
+  ## and thus is cached in RAM
+  if(!is.null(m)) {
+    message("getting cached data")
+    ## it is the case, we directly return this stored value
+    ## in cache and quit(exit) the function without running the
+    ## lines below
+    return(m)
+  }
+  
+  ## these lines below are executed ONLY if the invert matrix
+  ## has not been found in the cache
+  data <- x$get()
+  m <- solve(data, ...)
+  x$setInvertMatrix(m)
+  m
 }

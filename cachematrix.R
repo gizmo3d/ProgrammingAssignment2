@@ -1,7 +1,9 @@
-## - makeCacheMatrix asks for a square matrix as input, and return its invert
-## - cacheSolve takes the same input matrix to return either its cached version or called makeCacheMatrix
-## to compute it for the first time (needed once to put in the cache)
-## ------------------------------------------------------------------------
+## - makeCacheMatrix asks for a square matrix as input
+## - cacheSolve takes the result provided by the function makeCacheMatrix
+## to return :
+## EITHER its cached version 
+## OR call makeCacheMatrix (if m = NULL) to compute it for the first time (needed once to put in the cache)
+## ------------------------------------------------------------------------------------------------------
 ## Examples : 
 ##    myMatrix <- makeCacheMatrix(matrix((1:4), ncol=2)
 ##    cacheSolve(myMatrix)
@@ -9,6 +11,7 @@
 
 
 ## makeCacheMatrix is the function to be called FIRST, before the function cacheSolve 
+## the real code BEGINS here
 makeCacheMatrix <- function(x = matrix()) {
   m <- NULL
   
@@ -34,13 +37,12 @@ makeCacheMatrix <- function(x = matrix()) {
 cacheSolve <- function(x, ...) {
   m <- x$getInvertMatrix()
   
-  ## testing if the invert matrix has already been calculated
+  ## Testing if the invert matrix has already been calculated
   ## and thus is cached in RAM
   if(!is.null(m)) {
     message("getting cached data")
     ## it is the case, we directly return this stored value
-    ## in cache and quit(exit) the function without running the
-    ## lines below
+    ## in cache and quit(exit) the function cacheSolve
     return(m)
   }
   
